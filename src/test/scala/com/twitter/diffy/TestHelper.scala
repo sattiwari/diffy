@@ -7,6 +7,7 @@ import com.twitter.util.TimeConversions._
 import org.scalatest.mock.MockitoSugar
 import com.twitter.diffy.analysis._
 import com.twitter.diffy.compare.Difference
+import com.twitter.diffy.proxy.ResponseMode.EmptyResponse
 
 object TestHelper extends MockitoSugar {
   lazy val testSettings = Settings(
@@ -28,18 +29,19 @@ object TestHelper extends MockitoSugar {
     emailDelay = 0.seconds,
     rootUrl = "test",
     allowHttpSideEffects = true,
+    responseMode = EmptyResponse,
     excludeHttpHeadersComparison = true,
     skipEmailsWhenNoErrors = false,
     httpsPort = "443"
   )
 
-  def makeEmptyJoinedDifferences = {
+  def makeEmptyJoinedDifferences: JoinedDifferences = {
     val rawCounter = RawDifferenceCounter(new InMemoryDifferenceCounter())
     val noiseCounter = NoiseDifferenceCounter(new InMemoryDifferenceCounter())
     JoinedDifferences(rawCounter, noiseCounter)
   }
 
-  def makePopulatedJoinedDifferences(endpoint : String, diffs : Map[String, Difference]) = {
+  def makePopulatedJoinedDifferences(endpoint : String, diffs : Map[String, Difference]): JoinedDifferences = {
     val rawCounter = RawDifferenceCounter(new InMemoryDifferenceCounter())
     val noiseCounter = NoiseDifferenceCounter(new InMemoryDifferenceCounter())
     val data = new InMemoryEndpointMetadata()

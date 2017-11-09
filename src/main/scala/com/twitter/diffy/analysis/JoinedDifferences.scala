@@ -41,8 +41,8 @@ case class JoinedEndpoint(
   original: Map[String, FieldMetadata],
   noise: Map[String, FieldMetadata])
 {
-  def differences = endpoint.differences
-  def total = endpoint.total
+  def differences: Int = endpoint.differences
+  def total: Int = endpoint.total
   def fields: Map[String, JoinedField] = original map { case (path, field) =>
     path -> JoinedField(endpoint, field, noise.getOrElse(path, FieldMetadata.Empty))
   }
@@ -50,7 +50,7 @@ case class JoinedEndpoint(
 
 case class JoinedField(endpoint: EndpointMetadata, raw: FieldMetadata, noise: FieldMetadata) {
   // the percent difference out of the total # of requests
-  def absoluteDifference = abs(raw.differences - noise.differences) / endpoint.total.toDouble * 100
+  def absoluteDifference: Double = abs(raw.differences - noise.differences) / endpoint.total.toDouble * 100
   // the square error between this field's differences and the noisey counterpart's differences
-  def relativeDifference = abs(raw.differences - noise.differences) / (raw.differences + noise.differences).toDouble * 100
+  def relativeDifference: Double = abs(raw.differences - noise.differences) / (raw.differences + noise.differences).toDouble * 100
 }
